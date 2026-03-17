@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Environment / Credentials
+.env
+service-account.json
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store

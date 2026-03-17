@@ -1,0 +1,58 @@
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import datetime
+
+# Base Domain Model
+class BaseDomainModel(BaseModel):
+    id: Optional[str] = Field(None, description="Firestore document ID")
+    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+
+# ---------------------------------------------------------
+# Exam Domain Entities (Normalized)
+# ---------------------------------------------------------
+
+class Year(BaseDomainModel):
+    year: int
+    name: List[str] = Field(default_factory=list, description="Subjects available that year")
+
+class Subject(BaseDomainModel):
+    name: str
+    level: str
+
+class Topic(BaseDomainModel):
+    name: str
+    subtopics: List[str] = Field(default_factory=list)
+
+class Question(BaseDomainModel):
+    subject: str
+    year: int
+    paper: int
+    question_number: str
+    has_subquestions: bool
+    question_text: str
+    topic: str
+    subtopic: str
+    marks_total: int
+    question_type: str
+    has_diagram: bool
+    has_figure: bool
+
+class Subquestion(BaseDomainModel):
+    question_id: str = Field(description="Reference to the parent Question ID")
+    identifier: str = Field(description="Subpart identifier (e.g., 'a', 'b')")
+    text: str
+    marks: Optional[int] = None
+
+class Diagram(BaseDomainModel):
+    question_id: str = Field(description="Reference to the parent Question ID")
+    diagram_url: str = Field(description="Firebase Storage URL")
+    description: str
+
+class Figure(BaseDomainModel):
+    question_id: str = Field(description="Reference to the parent Question ID")
+    figure_type: str = Field(description="table, graph, or chart")
+    data_source: str = Field(description="URL/Path in Firebase Storage")

@@ -1,0 +1,38 @@
+[
+  {
+    "filename": "page_1_img_1.png",
+    "page": 1,
+    "question_number": null,
+    "caption": "",
+    "bbox": "[]",
+    "path": "/images/exam-images/page_1_img_1.png",
+    "source_pdf": "GCE A Level 2024 MeetLearn Pure Maths Mechanics 2.pdf"
+  },
+  {
+    "filename": "page_2_img_1.png",
+    "page": 2,
+    "question_number": null,
+    "caption": "",
+    "bbox": "[]",
+    "path": "/images/exam-images/page_2_img_1.png",
+    "source_pdf": "GCE A Level 2024 MeetLearn Pure Maths Mechanics 2.pdf"
+  },
+  {
+    "filename": "page_3_img_1.png",
+    "page": 3,
+    "question_number": null,
+    "caption": "",
+    "bbox": "[]",
+    "path": "/images/exam-images/page_3_img_1.png",
+    "source_pdf": "GCE A Level 2024 MeetLearn Pure Maths Mechanics 2.pdf"
+  },
+  {
+    "filename": "page_4_img_1.png",
+    "page": 4,
+    "question_number": null,
+    "caption": "",
+    "bbox": "[]",
+    "path": "/images/exam-images/page_4_img_1.png",
+    "source_pdf": "GCE A Level 2024 MeetLearn Pure Maths Mechanics 2.pdf"
+  }
+]
