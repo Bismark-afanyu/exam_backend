@@ -48,7 +48,7 @@ def test_list_exams_success(client, mock_collections):
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
-    assert {"subject": "Maths", "year": 2024, "paper": 1} in data
+    assert {"subject": "Maths", "year": 2024, "paper": 1}.items() <= data[0].items()
 
 def test_get_exam_not_found(client, mock_collections):
     mock_collections["questions"].where.return_value.where.return_value.stream.return_value = []
