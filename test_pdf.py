@@ -1,7 +1,9 @@
-import sys
 import json
+import sys
 from pathlib import Path
+
 from app.services.pdf.processor import ExamPaperProcessor
+
 
 def main():
     if len(sys.argv) < 2:

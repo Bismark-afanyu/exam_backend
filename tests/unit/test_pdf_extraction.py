@@ -1,6 +1,9 @@
-import pytest
-from app.services.pdf.text_extractor import TextExtractor
 from pathlib import Path
+
+import pytest
+
+from app.services.pdf.text_extractor import TextExtractor
+
 
 def test_text_extractor_interface():
     extractor = TextExtractor()

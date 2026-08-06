@@ -1,5 +1,7 @@
 import factory
+
 from app.schemas.item import ItemCreate
+
 
 class ItemCreateFactory(factory.Factory):
     class Meta:

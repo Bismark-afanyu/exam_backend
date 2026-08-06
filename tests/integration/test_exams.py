@@ -1,5 +1,7 @@
-import pytest
 from pathlib import Path
+
+import pytest
+
 
 def test_upload_exam_pdf_invalid_type(client):
     # Testing with a text file instead of PDF

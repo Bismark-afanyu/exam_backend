@@ -1,11 +1,11 @@
 # pdf_image_extractor.py
-import fitz  # PyMuPDF
-import re
-from PIL import Image
 import io
-import json
 import os
+import re
 from pathlib import Path
+
+import fitz  # PyMuPDF
+from PIL import Image
 
 
 class PDFImageExtractor:
@@ -88,7 +88,7 @@ class PDFImageExtractor:
 
         # Simple heuristic: find the nearest question number above the image
         last_question = None
-        for i, line in enumerate(lines):
+        for _, line in enumerate(lines):
             match = re.match(question_pattern, line.strip())
             if match:
                 last_question = int(match.group(1))
@@ -117,12 +117,10 @@ class PDFImageExtractor:
         image_rect = fitz.Rect(image_bbox)
 
         # Check vertical proximity
-        if abs(word_rect.y0 - image_rect.y1) < threshold:
-            return True
-        if abs(word_rect.y1 - image_rect.y0) < threshold:
-            return True
-
-        return False
+        return (
+            abs(word_rect.y0 - image_rect.y1) < threshold
+            or abs(word_rect.y1 - image_rect.y0) < threshold
+        )
 
 
 # PDF Text Extractor with Structure

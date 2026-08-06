@@ -34,12 +34,16 @@ dev = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 target-version = "py311"
+extend-exclude = ["build"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "C4", "DTZ", "PT", "SIM", "RET", "TCH"]
-ignore = ["B008"]  # B008 conflicts with FastAPI's Depends()/File() argument defaults
+ignore = [
+    "B008",  # B008 conflicts with FastAPI's Depends()/File() argument defaults
+    "E501",  # long lines incl. AI prompt strings in schemas
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

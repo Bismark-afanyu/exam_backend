@@ -20,12 +20,7 @@ def sanitize_latex(text: str) -> str:
 
     # 3. Fix Escaping. Ensure we have single backslashes in the string.
     # We replace literal '\\' with '\'
-    text = text.replace("\\\\", "\\")
-
-    # 4. Standardize ( ensures we don't have mix of delimiters)
-    # If the AI used \( \) or \[ \] we leave them as is.
-
-    return text
+    return text.replace("\\\\", "\\")
 
 
 def format_exam_paper_latex(data: dict) -> dict:
