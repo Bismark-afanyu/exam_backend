@@ -177,9 +177,11 @@ docker-shell:
 env-check:
 	@echo "$(CYAN)▶ Checking environment variables...$(RESET)"
 	@if [ ! -f .env ]; then echo "$(RED)✘ .env file not found$(RESET)"; exit 1; fi
-	@for var in FIREBASE_PROJECT_ID FIREBASE_CLIENT_EMAIL FIREBASE_PRIVATE_KEY; do \
+	@for var in FIREBASE_PROJECT_ID FIREBASE_CLIENT_EMAIL GEMINI_API_KEY; do \
 		if ! grep -q "^$$var=" .env; then echo "$(RED)✘ Missing: $$var$(RESET)"; else echo "$(GREEN)✔ $$var$(RESET)"; fi \
 	done
+	@if grep -q "^FIREBASE_SERVICE_ACCOUNT_PATH=" .env; then echo "$(GREEN)✔ FIREBASE_SERVICE_ACCOUNT_PATH$(RESET)"; fi
+	@if grep -q "^BACKEND_CORS_ORIGINS=" .env; then echo "$(GREEN)✔ BACKEND_CORS_ORIGINS$(RESET)"; fi
 
 clean:
 	@echo "$(CYAN)▶ Cleaning cache...$(RESET)"

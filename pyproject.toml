@@ -9,6 +9,7 @@ dependencies = [
     "uvicorn[standard]",
     "firebase-admin",
     "pydantic-settings",
+    "email-validator",
     "python-dotenv",
     "pdfminer.six",
     "pymupdf",
@@ -17,7 +18,7 @@ dependencies = [
     "pandas",
     "python-multipart",
     "JPype1",
-    "google-generativeai",
+    "google-genai",
 ]
 
 [project.optional-dependencies]
@@ -38,7 +39,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "C4", "DTZ", "PT", "SIM", "RET", "TCH"]
-ignore = []
+ignore = ["B008"]  # B008 conflicts with FastAPI's Depends()/File() argument defaults
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
