@@ -28,3 +28,4 @@ extract_all.py
 pdf_image_extractor.py
 exam.code-workspace
 *.pem
+deploy/
