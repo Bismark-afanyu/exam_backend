@@ -2,7 +2,16 @@ from datetime import UTC, datetime
 
 from google.cloud.firestore import Client, FieldFilter
 
-from app.models.exam import Diagram, Figure, Question, Subject, Subquestion, Topic, Year
+from app.models.exam import (
+    Diagram,
+    Figure,
+    Question,
+    Subject,
+    Subquestion,
+    SubSubquestion,
+    Topic,
+    Year,
+)
 from app.repositories.base import BaseRepository
 from app.schemas.exam import (
     DiagramData,
@@ -10,6 +19,7 @@ from app.schemas.exam import (
     FigureData,
     QuestionData,
     SubquestionData,
+    SubSubquestionData,
 )
 
 
@@ -26,6 +36,9 @@ class ExamRepository:
         self.topic_repo = BaseRepository(db, Topic, "topics")
         self.question_repo = BaseRepository(db, Question, "questions")
         self.subquestion_repo = BaseRepository(db, Subquestion, "subquestions")
+        self.sub_subquestion_repo = BaseRepository(
+            db, SubSubquestion, "sub_subquestions"
+        )
         self.diagram_repo = BaseRepository(db, Diagram, "diagrams")
         self.figure_repo = BaseRepository(db, Figure, "figures")
 
@@ -121,14 +134,27 @@ class ExamRepository:
 
             # Save related subquestions
             for sq in q_data.subquestions:
-                self.subquestion_repo.create(
+                saved_sq = self.subquestion_repo.create(
                     Subquestion(
                         question_id=saved_q.id,
                         identifier=sq.subquestion_identifier,
                         text=sq.text,
                         marks=sq.marks,
+                        image_url=sq.image_url,
                     )
                 )
+
+                # Save deeper sub-sub-questions (e.g., 1(a)(iii)) with their images
+                for ssq in sq.sub_subquestions:
+                    self.sub_subquestion_repo.create(
+                        SubSubquestion(
+                            subquestion_id=saved_sq.id,
+                            identifier=ssq.sub_subquestion_identifier,
+                            text=ssq.text,
+                            marks=ssq.marks,
+                            image_url=ssq.image_url,
+                        )
+                    )
 
             # Save related diagrams
             if q_data.image_url:
@@ -249,6 +275,10 @@ class ExamRepository:
         all_subquestions = self.subquestion_repo.get_by_field_in_values(
             "question_id", question_ids
         )
+        # Fetch all sub-sub-questions nested under those subquestions
+        all_sub_subquestions = self.sub_subquestion_repo.get_by_field_in_values(
+            "subquestion_id", [sq.id for sq in all_subquestions]
+        )
         # Fetch all diagrams
         all_diagrams = self.diagram_repo.get_by_field_in_values(
             "question_id", question_ids
@@ -260,11 +290,14 @@ class ExamRepository:
 
         # Group related entities by question_id for O(1) lookup
         sub_by_q = {}
+        ssq_by_sub = {}
         diag_by_q = {}
         fig_by_q = {}
 
         for sq in all_subquestions:
             sub_by_q.setdefault(sq.question_id, []).append(sq)
+        for ssq in all_sub_subquestions:
+            ssq_by_sub.setdefault(ssq.subquestion_id, []).append(ssq)
         for d in all_diagrams:
             diag_by_q.setdefault(d.question_id, []).append(d)
         for f in all_figures:
@@ -301,6 +334,19 @@ class ExamRepository:
                         subquestion_identifier=sq.identifier,
                         text=sq.text,
                         marks=sq.marks or 0,
+                        image_url=sq.image_url,
+                        sub_subquestions=[
+                            SubSubquestionData(
+                                sub_subquestion_identifier=ssq.identifier,
+                                text=ssq.text,
+                                marks=ssq.marks or 0,
+                                image_url=ssq.image_url,
+                            )
+                            for ssq in sorted(
+                                ssq_by_sub.get(sq.id, []),
+                                key=lambda x: x.identifier,
+                            )
+                        ],
                     )
                     for sq in subquestions
                 ],

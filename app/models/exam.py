@@ -55,6 +55,15 @@ class Subquestion(BaseDomainModel):
     identifier: str = Field(description="Subpart identifier (e.g., 'a', 'b')")
     text: str
     marks: int | None = None
+    image_url: str | None = None
+
+
+class SubSubquestion(BaseDomainModel):
+    subquestion_id: str = Field(description="Reference to the parent Subquestion ID")
+    identifier: str = Field(description="Sub-subpart identifier (e.g., 'i', 'ii')")
+    text: str
+    marks: int | None = None
+    image_url: str | None = None
 
 
 class Diagram(BaseDomainModel):

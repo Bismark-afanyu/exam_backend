@@ -31,12 +31,14 @@ class ExamAIParser:
         1. Classify the 'subject', 'level', 'year', and 'paper' number for this exam paper.
         2. Identify ALL individual questions across all pages. Do NOT skip any questions.
         3. Determine if it has subquestions (e.g., '1(a)', '1(b)'). If so, separate them into the 'subquestions' array.
-        4. Provide highly accurate 'topic' and 'subtopic' classification.
-        5. Provide the 'marks_total' for questions and subquestions.
-        6. Note any figures (tables, graphs) or diagrams referenced.
-        7. EXTREMELY IMPORTANT - SUBJECT SENSITIVITY:
+        4. PRESERVE NESTING: Many papers divide a sub-question further into sub-sub-parts, e.g., '1(a)(i)', '1(a)(ii)', '1(a)(iii)'. Keep these in the 'sub_subquestions' array of the correct parent sub-question ('a'). Do NOT flatten sub-sub-parts into the top-level 'subquestions' list.
+        5. LINK IMAGES TO THE EXACT PART: When a figure, table, graph, or diagram accompanies a specific question, sub-question, or sub-sub-question, set that part's 'image_url' to a non-empty placeholder string (e.g., 'PENDING_UPLOAD') so the image can be attached to the correct part during ingestion. A table shown for '1(a)(iii)' must be recorded on that sub-sub-question, not on question '1'.
+        6. Provide highly accurate 'topic' and 'subtopic' classification.
+        7. Provide the 'marks_total' for questions, subquestions, and sub-sub-questions.
+        8. Note any figures (tables, graphs) or diagrams referenced.
+        9. EXTREMELY IMPORTANT - SUBJECT SENSITIVITY:
            - For non-scientific subjects where no math is present, return plain text only.
-        8. EXTREMELY IMPORTANT - LATEX MATH FORMATTING (For Math/Science):
+        10. EXTREMELY IMPORTANT - LATEX MATH FORMATTING (For Math/Science):
            - You MUST convert all mathematical formulas, fractions, limits, integrals, vectors, and special characters into pure LaTeX strings.
            - For INLINE math, wrap it in: \( ... \)
            - For BLOCK math, wrap it in: \[ ... \]

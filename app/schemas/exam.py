@@ -8,6 +8,22 @@ from pydantic import BaseModel, Field
 # these into the normalized relational Firestore collections.
 
 
+class SubSubquestionData(BaseModel):
+    sub_subquestion_identifier: str = Field(
+        description="Identifier like 'i', 'ii', 'iii'"
+    )
+    text: str = Field(
+        description="Full text of the sub-sub-question. ALL mathematical formulas, fractions, matrices, and symbols MUST be formatted as compliant LaTeX strings (e.g., \\frac{a}{b}, x^2, \\int). Use SINGLE backslashes."
+    )
+    marks: int = Field(
+        description="Marks allocated specifically for this sub-sub-part (use 0 if not stated)"
+    )
+    image_url: str | None = Field(
+        default=None,
+        description="URL of an image belonging specifically to this sub-sub-question (e.g., a table, graph, or diagram shown in the paper next to this part). Null if there is none.",
+    )
+
+
 class SubquestionData(BaseModel):
     subquestion_identifier: str = Field(
         description="Identifier like 'a', 'b', 'i', 'ii'"
@@ -17,6 +33,14 @@ class SubquestionData(BaseModel):
     )
     marks: int = Field(
         description="Marks allocated specifically for this sub-part (use 0 if not stated)"
+    )
+    image_url: str | None = Field(
+        default=None,
+        description="URL of an image belonging specifically to this sub-question (e.g., a table, graph, or diagram shown in the paper next to this part). Null if there is none.",
+    )
+    sub_subquestions: list[SubSubquestionData] = Field(
+        default_factory=list,
+        description="Deeper sub-parts (e.g., 'i', 'ii', 'iii') nested inside this sub-question. Empty list if this sub-question is not further divided.",
     )
 
 
