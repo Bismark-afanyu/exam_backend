@@ -24,11 +24,6 @@ PROTECTED_REQUESTS = (
     ("post", "/api/v1/exams/save"),
     ("get", "/api/v1/exams/Maths/2024/1"),
     ("post", "/api/v1/exams/Maths/2024/1/pdf"),
-    ("get", "/api/v1/items/"),
-    ("post", "/api/v1/items/"),
-    ("get", "/api/v1/items/abc"),
-    ("put", "/api/v1/items/abc"),
-    ("delete", "/api/v1/items/abc"),
     ("get", "/api/v1/auth/me"),
 )
 

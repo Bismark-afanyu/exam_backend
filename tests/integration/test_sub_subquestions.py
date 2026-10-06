@@ -71,7 +71,7 @@ NESTED_EXAM = {
 }
 
 
-def test_save_exam_persists_nested_subparts_with_images(client, mock_collections):
+def test_save_exam_persists_nested_subparts_with_images(editor_client, mock_collections):
     mock_collections[
         "questions"
     ].where.return_value.where.return_value.stream.return_value = []
@@ -84,7 +84,7 @@ def test_save_exam_persists_nested_subparts_with_images(client, mock_collections
     for name, coll in mock_collections.items():
         coll.document.return_value.id = f"doc-{name}"
 
-    response = client.post("/api/v1/exams/save", json=NESTED_EXAM)
+    response = editor_client.post("/api/v1/exams/save", json=NESTED_EXAM)
     assert response.status_code == 200
 
     subquestion_calls = mock_collections["subquestions"].document().set.call_args_list

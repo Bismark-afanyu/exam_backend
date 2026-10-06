@@ -58,3 +58,26 @@ def create_access_token(
 def decode_token(token: str) -> dict[str, Any]:
     """Decodes and validates a JWT access token."""
     return jwt.decode(token, settings.SECRET_KEY, algorithms=[JWT_ALGORITHM])
+
+
+RESET_TOKEN_PURPOSE = "password_reset"
+
+
+def generate_reset_token(email: str) -> str:
+    """Creates a short-lived JWT for password reset."""
+    expire = datetime.now(UTC) + timedelta(minutes=settings.RESET_TOKEN_EXPIRE_MINUTES)
+    payload: dict[str, Any] = {
+        "sub": email,
+        "exp": expire,
+        "iat": datetime.now(UTC),
+        "purpose": RESET_TOKEN_PURPOSE,
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+
+def verify_reset_token(token: str) -> str:
+    """Validates a reset token and returns the email. Raises on invalid/expired."""
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    if data.get("purpose") != RESET_TOKEN_PURPOSE:
+        raise ValueError("Invalid token purpose.")
+    return data["sub"]

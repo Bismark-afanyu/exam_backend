@@ -221,6 +221,7 @@ class ExamRepository:
                     "subject": data["subject"],
                     "year": data["year"],
                     "paper": data["paper"],
+                    "pdf_path": data.get("pdf_path"),
                     "pdf_url": data.get("pdf_url"),
                 }
             )

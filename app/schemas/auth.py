@@ -21,6 +21,15 @@ class GoogleAuthRequest(BaseModel):
     id_token: str = Field(min_length=1)
 
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(min_length=1)
+    new_password: str = Field(min_length=6, max_length=128)
+
+
 class UserRead(BaseModel):
     id: str
     full_name: str

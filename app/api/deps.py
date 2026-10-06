@@ -38,6 +38,23 @@ def get_current_user(
     return user
 
 
+def get_current_editor(
+    user: dict[str, Any] = Depends(get_current_user),
+) -> dict[str, Any]:
+    """Requires an authenticated user with the 'editor' or 'admin' role.
+
+    Guards every write path on exam content (AI extraction, saving,
+    PDF storage) so students can never trigger paid pipelines or
+    overwrite exam data.
+    """
+    if user.get("role") not in ("editor", "admin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Editor privileges required.",
+        )
+    return user
+
+
 def get_current_admin(
     user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:

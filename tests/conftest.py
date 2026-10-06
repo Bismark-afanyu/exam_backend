@@ -23,14 +23,30 @@ def mock_current_user():
         "role": "student",
     }
 
-@pytest.fixture
-def client(mock_db, mock_current_user):
-    """Fixture for FastAPI TestClient with mocked DB and auth dependency."""
+def _make_client(mock_db, user):
     app.dependency_overrides[get_db] = lambda: mock_db
-    app.dependency_overrides[get_current_user] = lambda: mock_current_user
+    app.dependency_overrides[get_current_user] = lambda: user
     with TestClient(app) as c:
         yield c
     app.dependency_overrides = {}
+
+
+@pytest.fixture
+def client(mock_db, mock_current_user):
+    """Fixture for FastAPI TestClient with mocked DB and auth dependency."""
+    yield from _make_client(mock_db, mock_current_user)
+
+
+@pytest.fixture
+def editor_client(mock_db, mock_current_user):
+    """Client authenticated as an editor — the role allowed to write exam content."""
+    yield from _make_client(mock_db, {**mock_current_user, "role": "editor"})
+
+
+@pytest.fixture
+def admin_client(mock_db, mock_current_user):
+    """Client authenticated as an admin."""
+    yield from _make_client(mock_db, {**mock_current_user, "role": "admin"})
 
 @pytest.fixture(scope="session")
 def anyio_backend():
